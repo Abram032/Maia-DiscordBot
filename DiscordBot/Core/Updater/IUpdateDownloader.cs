@@ -7,6 +7,7 @@ namespace DiscordBot.Core.Updater
 {
     interface IUpdateDownloader
     {
-        Task<bool> DownloadUpdate();
+        Task DownloadUpdate(IUpdateInfo updateInfo);
+        void ExtractZip();
     }
 }

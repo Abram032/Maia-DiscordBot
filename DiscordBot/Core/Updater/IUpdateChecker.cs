@@ -7,6 +7,6 @@ namespace DiscordBot.Core.Updater
 {
     interface IUpdateChecker
     {
-        Task<bool> CheckForUpdates();
+        Task<IUpdateInfo> CheckForUpdates();
     }
 }
