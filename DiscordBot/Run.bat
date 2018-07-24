@@ -1,1 +1,0 @@
-dotnet DiscordBot.dll %1
