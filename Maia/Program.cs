@@ -1,15 +1,16 @@
-﻿using DiscordBot.Core.Commands;
-using DiscordBot.Core.Common;
-using DiscordBot.Core.Settings;
-using DiscordBot.Core.Updater;
-using DiscordBot.Persistence.Commands;
-using DiscordBot.Persistence.Common;
-using DiscordBot.Persistence.Settings;
-using DiscordBot.Persistence.Updater;
+﻿using Maia.Core.Commands;
+using Maia.Core.Common;
+using Maia.Core.Settings;
+using Maia.Core.Updater;
+using Maia.Persistence.Commands;
+using Maia.Persistence.Common;
+using Maia.Persistence.Settings;
+using Maia.Persistence.Updater;
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 
-namespace DiscordBot
+namespace Maia
 {
     class Program
     {
@@ -23,12 +24,12 @@ namespace DiscordBot
 
         static IUpdateDownloader updateDownloader = new UpdateDownloader();
         static IUpdateChecker updateChecker = new UpdateChecker();
-        static IUpdateCleaner updateCleaner = new UpdateCleaner();
 
+        public static void UpdateManager() => new UpdateManager(updateDownloader, updateChecker, arg).MainAsync().GetAwaiter().GetResult();
         public static void Bot() => new Bot(connectionHandler, configuration, messageHandler).MainAsync().GetAwaiter().GetResult();
-        public static void UpdateManager() => new UpdateManager(updateCleaner, updateDownloader, updateChecker).MainAsync().GetAwaiter().GetResult();
-        static Task bot = new Task(Bot);
+
         static Task updateManager = new Task(UpdateManager);
+        static Task bot = new Task(Bot);        
 
         public static string arg { get; private set; } = string.Empty;
 

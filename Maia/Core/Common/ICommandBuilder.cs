@@ -1,10 +1,10 @@
 ﻿using Discord;
-using DiscordBot.Core.Commands;
+using Maia.Core.Commands;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DiscordBot.Core.Common
+namespace Maia.Core.Common
 {
     interface ICommandBuilder
     {

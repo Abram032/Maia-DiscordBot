@@ -1,11 +1,11 @@
-﻿using DiscordBot.Core.Common;
-using DiscordBot.Core.Settings;
+﻿using Maia.Core.Common;
+using Maia.Core.Settings;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiscordBot
+namespace Maia
 {
     class Bot
     {

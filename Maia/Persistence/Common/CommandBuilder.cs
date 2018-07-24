@@ -1,14 +1,14 @@
 ﻿using Discord;
-using DiscordBot.Core.Commands;
-using DiscordBot.Core.Common;
-using DiscordBot.Core.Settings;
-using DiscordBot.Persistence.Commands;
-using DiscordBot.Resources;
+using Maia.Core.Commands;
+using Maia.Core.Common;
+using Maia.Core.Settings;
+using Maia.Persistence.Commands;
+using Maia.Resources;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DiscordBot.Persistence.Common
+namespace Maia.Persistence.Common
 {
     class CommandBuilder : ICommandBuilder
     {

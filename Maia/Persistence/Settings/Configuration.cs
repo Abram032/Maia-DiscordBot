@@ -1,12 +1,12 @@
-﻿using DiscordBot.Core.Settings;
-using DiscordBot.Resources;
+﻿using Maia.Core.Settings;
+using Maia.Resources;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiscordBot.Persistence.Settings
+namespace Maia.Persistence.Settings
 {
     class Configuration : IConfiguration
     {

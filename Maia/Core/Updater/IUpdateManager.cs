@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiscordBot.Core.Updater
+namespace Maia.Core.Updater
 {
     interface IUpdateManager
     {
-        Task Update();
+        Task Update(string updateDirPath);
     }
 }

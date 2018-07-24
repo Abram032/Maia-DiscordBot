@@ -1,6 +1,6 @@
-﻿using DiscordBot.Core.Converters;
-using DiscordBot.Core.Updater;
-using DiscordBot.Persistence.Updater;
+﻿using Maia.Core.Converters;
+using Maia.Core.Updater;
+using Maia.Persistence.Updater;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DiscordBot.Persistence.Converters
+namespace Maia.Persistence.Converters
 {
     class UpdateInfoConverter : JsonCreationConverter<IUpdateInfo>
     {

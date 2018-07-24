@@ -1,14 +1,14 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using DiscordBot.Core.Common;
-using DiscordBot.Core.Settings;
-using DiscordBot.Resources;
+using Maia.Core.Common;
+using Maia.Core.Settings;
+using Maia.Resources;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiscordBot.Persistence.Common
+namespace Maia.Persistence.Common
 {
     class ConnectionHandler : IConnectionHandler
     {

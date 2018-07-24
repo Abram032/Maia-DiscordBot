@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiscordBot.Core.Commands
+namespace Maia.Core.Commands
 {
     interface ICommand
     {

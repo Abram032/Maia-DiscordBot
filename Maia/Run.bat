@@ -1,1 +1,1 @@
-dotnet DiscordBot.dll %1
+dotnet Maia.dll %1

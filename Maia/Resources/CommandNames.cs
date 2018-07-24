@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DiscordBot.Resources
+namespace Maia.Resources
 {
     class CommandNames
     {

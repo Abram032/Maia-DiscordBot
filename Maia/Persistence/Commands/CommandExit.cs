@@ -1,14 +1,14 @@
 ﻿using Discord;
-using DiscordBot.Core.Commands;
-using DiscordBot.Core.Common;
-using DiscordBot.Core.Settings;
-using DiscordBot.Resources;
+using Maia.Core.Commands;
+using Maia.Core.Common;
+using Maia.Core.Settings;
+using Maia.Resources;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiscordBot.Persistence.Commands
+namespace Maia.Persistence.Commands
 {
     class CommandExit : ICommand
     {

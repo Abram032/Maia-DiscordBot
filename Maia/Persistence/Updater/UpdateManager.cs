@@ -1,24 +1,27 @@
-﻿using DiscordBot.Core.Updater;
-using DiscordBot.Resources;
+﻿using Maia.Core.Updater;
+using Maia.Resources;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiscordBot.Persistence.Updater
+namespace Maia.Persistence.Updater
 {
     class UpdateManager : IUpdateManager
     {
-        IUpdateCleaner _cleaner;
         IUpdateDownloader _downloader;
         IUpdateChecker _updateChecker;
+        private string Arg { get; set; }
 
-        public UpdateManager(IUpdateCleaner cleaner, IUpdateDownloader downloader, IUpdateChecker updateChecker)
+        public UpdateManager(IUpdateDownloader downloader, IUpdateChecker updateChecker, string arg)
         {
-            _cleaner = cleaner;
             _downloader = downloader;
             _updateChecker = updateChecker;
+            Arg = arg;
         }
 
         public async Task MainAsync()
@@ -28,8 +31,8 @@ namespace DiscordBot.Persistence.Updater
             else
             {
                 Console.WriteLine("Checking for updates...");
-                IUpdateInfo updateInfo = await _updateChecker.CheckForUpdates();
-                if(CompareVersions(updateInfo) == false)
+                IUpdateInfo updateInfo = await _updateChecker.CheckForUpdates();                
+                if(CompareVersions(updateInfo, Info.version) == false)
                     Console.WriteLine("No new updates found.");
                 else
                 {
@@ -43,19 +46,30 @@ namespace DiscordBot.Persistence.Updater
                         await _downloader.DownloadUpdate(updateInfo);
                         Console.WriteLine("Extracting files...");
                         _downloader.ExtractZip();
-                        await Update();
+                        string updateDirPath = "Maia-DiscordBot-" + updateInfo.Version;
+                        if(Directory.Exists(updateDirPath))
+                            await Update(updateDirPath);
+                        else
+                            Console.WriteLine("Could not find update directory!");
                     }
                 }
             }
+            Console.WriteLine();
             Console.WriteLine("--------------------------------------------------");
             Console.WriteLine("Current version: " + Info.version);
-            await Task.CompletedTask;
         }
 
-        public async Task Update()
+        public async Task Update(string updateDirPath)
         {
-            Console.WriteLine("Updating...");
-
+            Console.WriteLine("Application will now close in order to update.");
+            await Task.Delay(3000);
+            var processPID = Process.GetCurrentProcess().Id;
+            var dir = Environment.CurrentDirectory + @"/";
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                Process.Start(dir + "UpdateSetup.bat", updateDirPath + " " + processPID);
+            else
+                Process.Start(dir + "UpdateSetup.sh", updateDirPath + " " + processPID);
+            Environment.Exit(0);
         }
 
         private bool CheckConnection()
@@ -69,14 +83,17 @@ namespace DiscordBot.Persistence.Updater
             return false;
         }
 
-        private bool CompareVersions(IUpdateInfo updateInfo)
+        private bool CompareVersions(IUpdateInfo updateInfo, string version)
         {
             return (updateInfo.Version != string.Empty && updateInfo.Version.Equals(Info.version) == false);
         }
 
         private bool UserResponse()
         {
-            return Console.ReadKey().Key.Equals(ConsoleKey.Y);
+            if(Arg.Equals("-y"))
+                return true;
+            else
+                return Console.ReadLine().StartsWith('y');
         }
     }
 }

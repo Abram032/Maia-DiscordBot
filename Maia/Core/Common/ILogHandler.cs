@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiscordBot.Core.Common
+namespace Maia.Core.Common
 {
     public interface ILogHandler
     {

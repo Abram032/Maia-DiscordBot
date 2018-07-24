@@ -1,5 +1,4 @@
-﻿using DiscordBot.Core.Updater;
-using DiscordBot.Resources;
+﻿using Maia.Core.Updater;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +8,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiscordBot.Persistence.Updater
+namespace Maia.Persistence.Updater
 {
     class UpdateDownloader : IUpdateDownloader
     {
@@ -29,8 +28,11 @@ namespace DiscordBot.Persistence.Updater
 
         public void ExtractZip()
         {
-            ZipFile.ExtractToDirectory(zipPath, Environment.CurrentDirectory);
-            File.Delete(zipPath);
+            if(File.Exists(zipPath))
+            {
+                ZipFile.ExtractToDirectory(zipPath, Environment.CurrentDirectory);
+                File.Delete(zipPath);
+            }           
         }
     }
 }

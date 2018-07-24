@@ -1,15 +1,15 @@
 ﻿using Discord;
-using DiscordBot.Core.Commands;
-using DiscordBot.Core.Common;
-using DiscordBot.Core.Settings;
-using DiscordBot.Resources;
+using Maia.Core.Commands;
+using Maia.Core.Common;
+using Maia.Core.Settings;
+using Maia.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiscordBot.Persistence.Common
+namespace Maia.Persistence.Common
 {
     class CommandHandler : ICommandHandler
     {

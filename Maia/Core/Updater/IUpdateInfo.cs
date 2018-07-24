@@ -1,9 +1,8 @@
-﻿using DiscordBot.Persistence.Updater;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DiscordBot.Core.Updater
+namespace Maia.Core.Updater
 {
     interface IUpdateInfo
     {

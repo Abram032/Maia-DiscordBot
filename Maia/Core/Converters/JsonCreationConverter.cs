@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DiscordBot.Core.Converters
+namespace Maia.Core.Converters
 {
     public abstract class JsonCreationConverter<T> : JsonConverter
     {
