@@ -31,6 +31,8 @@ namespace Maia.Persistence.Updater
         private IUpdateInfo DeserializeResponse(string json)
         {
             var infoList = JsonConvert.DeserializeObject<List<IUpdateInfo>>(json, new UpdateInfoConverter());
+            if(infoList.Count == 0)
+                return new UpdateInfo();
             return infoList[0];
         }
     }
