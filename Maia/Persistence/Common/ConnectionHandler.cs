@@ -105,7 +105,7 @@ namespace Maia.Persistence.Common
         }
 
         public async Task Disconnect()
-        {
+        {           
             await Client.LogoutAsync();
             await Task.CompletedTask;
         }
