@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Maia.Persistence.Commands
 {
-    class CommandExit : ICommand
+    class ExitCommand : ICommand
     {
         private IConfiguration _config;
         private List<string> _parameters;
@@ -19,7 +19,7 @@ namespace Maia.Persistence.Commands
         private IMessageWriter _messageWriter;
         private IConnectionHandler _connectionHandler;
 
-        public CommandExit(List<string> parameters, IUser author, IMessageChannel channel, IConfiguration config, IMessageWriter messageWriter, IConnectionHandler connectionHandler)
+        public ExitCommand(List<string> parameters, IUser author, IMessageChannel channel, IConfiguration config, IMessageWriter messageWriter, IConnectionHandler connectionHandler)
         {
             _parameters = parameters;
             _author = author;

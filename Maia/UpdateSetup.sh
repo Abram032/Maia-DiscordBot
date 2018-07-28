@@ -1,12 +1,15 @@
 #!/bin/bash
 
-kill -9 $2
+dir=$1
+proc=$2
+
+kill -9 $proc
 echo "Updating..."
-cp $1/*.* .
+cp $dir/*.* .
 echo "Cleaning up..."
-rm -f $1/*
-rmdir $1
+rm -f $dir/*
+rmdir $dir
 echo "Update complete!"
 echo "Application will now restart!"
-sleep 5
-exec Run.sh
+sleep '5'
+./Run.sh

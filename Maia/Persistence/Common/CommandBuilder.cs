@@ -29,16 +29,19 @@ namespace Maia.Persistence.Common
             switch(command)
             {
                 case CommandNames.exit:
-                    _command = new CommandExit(parameters, author, channel, _config, _messageWriter, _connectionHandler);
+                    _command = new ExitCommand(parameters, author, channel, _config, _messageWriter, _connectionHandler);
                     break;
-                case CommandNames.restart:
+                case CommandNames.update:
+                    _command = new UpdateCommand(parameters, author, channel, _config, _messageWriter, _connectionHandler);
                     break;
-                case CommandNames.help:
-                    break;
-                case CommandNames.info:
-                    break;
-                case CommandNames.random:
-                    break;
+                //case CommandNames.restart:
+                //    break;
+                //case CommandNames.help:
+                //    break;
+                //case CommandNames.info:
+                //    break;
+                //case CommandNames.random:
+                //    break;
                 default:
                     break;
             }

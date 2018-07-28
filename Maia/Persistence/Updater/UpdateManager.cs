@@ -46,7 +46,7 @@ namespace Maia.Persistence.Updater
                         await _downloader.DownloadUpdate(updateInfo);
                         Console.WriteLine("Extracting files...");
                         _downloader.ExtractZip();
-                        string updateDirPath = "Maia-DiscordBot-" + updateInfo.Version;
+                        string updateDirPath = "Maia-DiscordBot";
                         if(Directory.Exists(updateDirPath))
                             await Update(updateDirPath);
                         else
