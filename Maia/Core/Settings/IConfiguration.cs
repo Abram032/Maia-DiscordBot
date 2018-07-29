@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 
 namespace Maia.Core.Settings
 {
-    interface IConfiguration
+    public interface IConfiguration
     {
-        Task LoadConfig();
+        void LoadConfig();
         string GetValue(string key);
         string GetDefaultValue(string key);
+        string GetValueOrDefault(string key);
     }
 }

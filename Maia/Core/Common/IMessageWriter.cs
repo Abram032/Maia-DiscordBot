@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Maia.Core.Common
 {
-    interface IMessageWriter
+    public interface IMessageWriter
     {
         Task Send(string message, IUser author, IMessageChannel channel);
     }

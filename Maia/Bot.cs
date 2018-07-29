@@ -22,7 +22,7 @@ namespace Maia
 
         public async Task MainAsync()
         {
-            await _config.LoadConfig();
+            _config.LoadConfig();
             await _connectionManager.Connect();
             await _messageHandler.Handle();
             await Task.Delay(-1);

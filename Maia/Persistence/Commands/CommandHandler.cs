@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Maia.Persistence.Common
+namespace Maia.Persistence.Commands
 {
     class CommandHandler : ICommandHandler
     {
@@ -28,7 +28,7 @@ namespace Maia.Persistence.Common
         {
             ICommand command = CreateCommand(message);
             if(command != null)
-                await command.Execute();
+                await command.ExecuteAsync();
             else
                 await _messageWriter.Send("Unknown command.", message.Author, message.Channel);
             await Task.CompletedTask;
@@ -36,36 +36,34 @@ namespace Maia.Persistence.Common
 
         private ICommand CreateCommand(IMessage message)
         {
-            string command = message.Content;
+            string _message = message.Content;
             IUser author = message.Author;
             IMessageChannel channel = message.Channel;
-            command = RemovePrefix(command);
-            command = ToLowercase(command);
-            List<string> parameters = GetParameters(command);
-            command = ExtractCommand(command);
-            return _commandBuilder.BuildCommand(command, parameters, author, channel); 
+            _message = RemovePrefix(_message);
+            _message = ToLowercase(_message);
+            string command = ExtractCommand(_message);
+            string[] parameters = GetParameters(_message);
+            return _commandBuilder.BuildCommand(command, author, channel, parameters); 
         }
 
-        private List<string> GetParameters(string command)
+        private string[] GetParameters(string message)
         {
-            List<string> parameters = command.Split(' ').ToList();
-            parameters.RemoveAt(0);
-            return parameters;
+            return message.Split(' ').ToList().Skip(1).ToArray();
         }
 
-        private string ExtractCommand(string command)
+        private string ExtractCommand(string message)
         {
-            return command.Split(' ').GetValue(0).ToString();
+            return message.Split(' ').GetValue(0).ToString();
         }
 
-        private string ToLowercase(string command)
+        private string ToLowercase(string message)
         {
-            return command.ToLower();
+            return message.ToLower();
         }
 
-        private string RemovePrefix(string command)
+        private string RemovePrefix(string message)
         {
-            return command.Replace(_config.GetValue(ConfigKeys.CommandPrefix), string.Empty).Trim();
+            return message.Replace(_config.GetValue(ConfigKeys.CommandPrefix), string.Empty).Trim();
         }
     }
 }

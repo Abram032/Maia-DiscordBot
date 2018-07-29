@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Maia.Core.Common
+namespace Maia.Core.Commands
 {
-    interface ICommandHandler
+    public interface ICommandHandler
     {
         Task Handle(IMessage message);
     }

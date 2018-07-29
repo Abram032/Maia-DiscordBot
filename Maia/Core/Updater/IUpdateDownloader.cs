@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Maia.Core.Updater
 {
-    interface IUpdateDownloader
+    public interface IUpdateDownloader
     {
         Task DownloadUpdate(IUpdateInfo updateInfo);
         void ExtractZip();

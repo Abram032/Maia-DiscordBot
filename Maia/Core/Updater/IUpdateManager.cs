@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Maia.Core.Updater
 {
-    interface IUpdateManager
+    public interface IUpdateManager
     {
         Task Update(string updateDirPath);
     }
