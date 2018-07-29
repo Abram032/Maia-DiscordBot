@@ -10,66 +10,22 @@ using System.Threading.Tasks;
 
 namespace Maia.Persistence.Commands
 {
-    class ExitCommand : ICommand
+    class ExitCommand : BaseCommand, ICommand
     {
-        private IConfiguration _config;
-        private List<string> _parameters;
-        private IUser _author;
-        private IMessageChannel _channel;
-        private IMessageWriter _messageWriter;
-        private IConnectionHandler _connectionHandler;
-
-        public ExitCommand(List<string> parameters, IUser author, IMessageChannel channel, IConfiguration config, IMessageWriter messageWriter, IConnectionHandler connectionHandler)
+        public ExitCommand(IUser author, IConfiguration config, IMessageChannel channel, IMessageWriter messageWriter, params string[] parameters)
+            : base(author, config, channel, messageWriter, parameters)
         {
-            _parameters = parameters;
-            _author = author;
-            _channel = channel;
-            _config = config;
-            _messageWriter = messageWriter;
-            _connectionHandler = connectionHandler;
         }
 
-        public string Help => throw new NotImplementedException();
-
-        public async Task Execute()
+        public override async Task ExecuteAsync()
         {
-            if (ValidateParameters())
+            if(CanExecute())
             {
-                if (ValidateAuthor())
-                {
-                    await _messageWriter.Send("Cya!", _author, _channel);
-                    await _connectionHandler.Disconnect();
-                    Environment.Exit(0);
-                }
-                else
-                    await _messageWriter.Send("Not authorized!", _author, _channel);   
+                await _messageWriter.Send("Cya!", _author, _channel);
+                Environment.Exit(0);
             }
             else
-                await _messageWriter.Send("Invalid use of command!", _author, _channel);
-            await Task.CompletedTask;
-        }
-
-        private bool ValidateParameters()
-        {
-            if (_parameters.Count > 0)
-                return false;
-            return true;
-        }
-
-        private bool ValidateAuthor()
-        {
-            if (_author.Id == GetOwner())
-                return true;
-            return false;
-        }
-
-        private ulong GetOwner()
-        {
-            string owner = _config.GetValue(ConfigKeys.OwnerID);
-            ulong ownerID;
-            if (ulong.TryParse(owner, out ownerID) == false)
-                return default;
-            return ownerID;
+                await _messageWriter.Send("Invalid use of command or not authorized!", _author, _channel);
         }
     }
 }

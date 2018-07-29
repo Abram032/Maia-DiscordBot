@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Maia.Core.Common
 {
-    interface IConnectionHandler
+    public interface IConnectionHandler
     {
         Task Connect();
-        Task Disconnect();
         DiscordSocketClient Client { get; }
     }
 }

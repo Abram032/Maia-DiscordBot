@@ -7,6 +7,7 @@ using Maia.Persistence.Common;
 using Maia.Persistence.Settings;
 using Maia.Persistence.Updater;
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -14,11 +15,13 @@ namespace Maia
 {
     class Program
     {
+        public static Stopwatch uptime = new Stopwatch();
         static IConfiguration configuration = Configuration.Instance;
+        static ICommandsInfo commandsInfo = CommandsInfo.Instance;
         static ILogHandler logHandler = new LogHandler(configuration);
         static IConnectionHandler connectionHandler = new ConnectionHandler(configuration, logHandler);
         static IMessageWriter messageWriter = new MessageWriter();
-        static ICommandBuilder commandBuilder = new CommandBuilder(configuration, messageWriter, connectionHandler);
+        static ICommandBuilder commandBuilder = new CommandBuilder(configuration, messageWriter, commandsInfo);
         static ICommandHandler commandHandler = new CommandHandler(configuration, commandBuilder, messageWriter);
         static IMessageHandler messageHandler = new MessageHandler(configuration, connectionHandler, commandHandler);
 
@@ -35,6 +38,7 @@ namespace Maia
 
         static void Main(string[] args)
         {
+            uptime.Start();
             arg = GetArgument(args);
             updateManager.Start();
             updateManager.Wait();

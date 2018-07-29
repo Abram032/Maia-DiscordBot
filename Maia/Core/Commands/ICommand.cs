@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Maia.Core.Commands
 {
-    interface ICommand
+    public interface ICommand
     {
-        Task Execute();
-        string Help { get; }
+        Task ExecuteAsync();
+        bool CanExecute();
     }
 }

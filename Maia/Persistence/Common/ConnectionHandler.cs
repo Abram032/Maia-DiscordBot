@@ -32,7 +32,6 @@ namespace Maia.Persistence.Common
                 await InitConnection();
             else
                 Console.WriteLine("Invalid Token!");
-            await Task.CompletedTask;
         }
 
         private string GetToken()
@@ -81,7 +80,6 @@ namespace Maia.Persistence.Common
         {
             await Client.LoginAsync(TokenType.Bot, Token);
             await Client.StartAsync();
-            await Task.CompletedTask;
         }
 
         private bool ValidateToken()
@@ -101,13 +99,6 @@ namespace Maia.Persistence.Common
         private async Task Log(LogMessage log)
         {
             await _logHandler.Handle(log);
-            await Task.CompletedTask;
-        }
-
-        public async Task Disconnect()
-        {           
-            await Client.LogoutAsync();
-            await Task.CompletedTask;
         }
     }
 }

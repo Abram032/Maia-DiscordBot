@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Maia.Core.Updater
 {
-    interface IUpdateChecker
+    public interface IUpdateChecker
     {
         Task<IUpdateInfo> CheckForUpdates();
     }

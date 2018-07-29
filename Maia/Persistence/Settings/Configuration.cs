@@ -3,6 +3,7 @@ using Maia.Resources;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,7 +23,6 @@ namespace Maia.Persistence.Settings
             config = new Dictionary<string, string>();
             defaultConfig = new Dictionary<string, string>();
             InitConfig(defaultConfig);
-            InitConfig(config);
             if (File.Exists(configPath) == false)
                 CreateConfig().Wait();
         }
@@ -31,9 +31,9 @@ namespace Maia.Persistence.Settings
         {
             get
             {
-                lock(syncRoot)
+                lock (syncRoot)
                 {
-                    if(instance == null)
+                    if (instance == null)
                         instance = new Configuration();
                 }
                 return instance;
@@ -49,6 +49,13 @@ namespace Maia.Persistence.Settings
             config.Add(ConfigKeys.LogSeverity, "Info");
         }
 
+        public string GetValueOrDefault(string key)
+        {
+            if(config != null && config.ContainsKey(key))
+                return config[key];
+            return defaultConfig[key];
+        }
+
         public string GetValue(string key)
         {
             return config[key];
@@ -62,26 +69,31 @@ namespace Maia.Persistence.Settings
         private async Task CreateConfig()
         {
             CreateDirectory();
-            CreateFile().Wait();
-            await Task.CompletedTask;
+            await CreateFile();
         }
 
-        public async Task LoadConfig()
+        public void LoadConfig()
         {
             using (StreamReader sr = new StreamReader(configPath))
             {
-                while(sr.Peek() >= 0)
+                while (sr.Peek() >= 0)
                 {
                     string line = sr.ReadLine();
-                    if(line.StartsWith('#') == false || line.StartsWith(string.Empty) == false)
+                    if (line.StartsWith('#') == false && line.Equals(string.Empty) == false)
                     {
                         string key = ExtractKeyAndValue(line, 0);
                         string value = ExtractKeyAndValue(line, 1);
-                        config[key] = value;
+                        config.Add(key, value);
                     }
                 }
             }
-            await Task.CompletedTask;
+            if (ValidateConfig() == false)
+            {
+                File.Delete(configPath);
+                CreateConfig().Wait();
+                config.Clear();
+                LoadConfig();
+            }
         }
 
         private string ExtractKeyAndValue(string line, int index)
@@ -89,7 +101,7 @@ namespace Maia.Persistence.Settings
             line = line.Trim();
             line = line.Replace(" ", string.Empty);
             string[] pairs = line.Split(':');
-            if(pairs.Length > index)
+            if (pairs.Length > index)
                 return pairs[index];
             else
                 return string.Empty;
@@ -97,8 +109,22 @@ namespace Maia.Persistence.Settings
 
         private void CreateDirectory()
         {
-            if(Directory.Exists(directoryPath) == false)
+            if (Directory.Exists(directoryPath) == false)
                 Directory.CreateDirectory(directoryPath);
+        }
+
+        private bool ValidateConfig()
+        {
+            List<string> keys = defaultConfig.Keys.ToList();
+            List<string> fileKeys = config.Keys.ToList();
+            if (keys.Count > fileKeys.Count)
+                return false;
+            foreach (var key in keys)
+            {
+                if (fileKeys.Contains(key) == false)
+                    return false;
+            }
+            return true;
         }
 
         private async Task CreateFile()
@@ -110,22 +136,22 @@ namespace Maia.Persistence.Settings
                 await sw.WriteLineAsync("# Put your token here so your bot can connect.");
                 await sw.WriteLineAsync("# You can get your app token from here https://discordapp.com/developers/applications/me");
                 await sw.WriteLineAsync("# Example: Token: 123456789xyzabc");
-                await sw.WriteLineAsync(ConfigKeys.Token + ": ");
+                await sw.WriteLineAsync(ConfigKeys.Token + ": " + GetValueOrDefault(ConfigKeys.Token));
                 await sw.WriteLineAsync();
                 await sw.WriteLineAsync("# Your owner ID, gives you privileges to use owner only commands from chat.");
                 await sw.WriteLineAsync("# To get your ID, right click on yourself in the chat and Copy ID.");
                 await sw.WriteLineAsync("# Example: 1234567890");
-                await sw.WriteLineAsync(ConfigKeys.OwnerID + ": ");
+                await sw.WriteLineAsync(ConfigKeys.OwnerID + ": " + GetValueOrDefault(ConfigKeys.OwnerID));
                 await sw.WriteLineAsync();
                 await sw.WriteLineAsync("# Saves all incomming console logs to a file.");
                 await sw.WriteLineAsync("# <true, false>, Default: false");
-                await sw.WriteLineAsync(ConfigKeys.SaveLogs + ": false");
+                await sw.WriteLineAsync(ConfigKeys.SaveLogs + ": " + GetValueOrDefault(ConfigKeys.SaveLogs));
                 await sw.WriteLineAsync();
                 await sw.WriteLineAsync("# Command prefix for all your bot commands.");
                 await sw.WriteLineAsync("# Can be any you like for example: '!', '*', ';' etc.");
                 await sw.WriteLineAsync("# It can also be a string of characters like: \"!t\", \"!test\" etc.");
                 await sw.WriteLineAsync("# Default: !t");
-                await sw.WriteLineAsync(ConfigKeys.CommandPrefix + ": !t");
+                await sw.WriteLineAsync(ConfigKeys.CommandPrefix + ": " + GetValueOrDefault(ConfigKeys.CommandPrefix));
                 await sw.WriteLineAsync();
                 //await sw.WriteLineAsync("# Deletes messages that bot sends after a while.");
                 //await sw.WriteLineAsync("# <true, false>, Default: false");
@@ -137,9 +163,8 @@ namespace Maia.Persistence.Settings
                 //await sw.WriteLineAsync();
                 await sw.WriteLineAsync("# Sets severity for console logs.");
                 await sw.WriteLineAsync("# <Critical, Debug, Error, Info, Verbose, Warning>, Default: Info");
-                await sw.WriteLineAsync(ConfigKeys.LogSeverity + ": Info");
+                await sw.WriteLineAsync(ConfigKeys.LogSeverity + ": " + GetValueOrDefault(ConfigKeys.LogSeverity));
             }
-            await Task.CompletedTask;
-        }    
+        }
     }
 }

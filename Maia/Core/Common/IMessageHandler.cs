@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Maia.Core.Common
 {
-    interface IMessageHandler
+    public interface IMessageHandler
     {
         Task Handle();
     }

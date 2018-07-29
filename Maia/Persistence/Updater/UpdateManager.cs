@@ -7,6 +7,7 @@ using System.IO;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Maia.Persistence.Updater
@@ -82,16 +83,36 @@ namespace Maia.Persistence.Updater
                 return true;
             return false;
         }
-
+        //TODO: Is it working and is correct?
         private bool CompareVersions(IUpdateInfo updateInfo, string version)
         {
-            return (updateInfo.Version != string.Empty && updateInfo.Version.Equals(Info.version) == false);
+            if (updateInfo.Version == string.Empty)
+                return false;
+            string updateVersion = updateInfo.Version.Split('-').GetValue(0).ToString();
+            string currentVersion = Info.version.Split('-').GetValue(0).ToString();
+            string[] _updateVersion = updateVersion.Split('.');
+            string[] _currentVersion = currentVersion.Split('.');
+            int updateMajor = int.Parse(_updateVersion[0]);
+            int updateMinor = int.Parse(_updateVersion[1]);
+            int updateBuild = int.Parse(_updateVersion[2]);
+            int major = int.Parse(_currentVersion[0]);
+            int minor = int.Parse(_currentVersion[1]);
+            int build = int.Parse(_currentVersion[2]);
+            if(updateMajor > major)
+                return true;
+            if(updateMinor > minor)
+                return true;
+            if(updateBuild > build)
+                return true;
+            return false;
         }
 
         private bool UserResponse()
         {
             if(Arg.Equals("-y"))
                 return true;
+            else if(Arg.Equals("-n"))
+                return false;
             else
                 return Console.ReadLine().StartsWith('y');
         }

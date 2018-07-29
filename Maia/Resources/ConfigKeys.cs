@@ -10,8 +10,6 @@ namespace Maia.Resources
         public const string OwnerID = "OwnerID";
         public const string SaveLogs = "SaveLogs";
         public const string CommandPrefix = "CommandPrefix";
-        //public const string DeleteMessages = "DeleteMessages";
-        //public const string DeleteCommandMessages = "DeleteCommandMessages";
         public const string LogSeverity = "LogSeverity";
     }
 }
