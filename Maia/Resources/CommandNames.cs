@@ -14,5 +14,11 @@ namespace Maia.Resources
         public const string github = "github";
         public const string version = "version";
         public const string uptime = "uptime";
+        public const string flipcoin = "flipcoin";
+        public const string roll = "roll";
+        public const string purge = "purge";
+        public const string color = "color";
+        public const string summon = "summon";
+        public const string dismiss = "dismiss";
     }
 }

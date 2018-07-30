@@ -15,12 +15,14 @@ namespace Maia.Persistence.Commands
         private IConfiguration _config;
         private IMessageWriter _messageWriter;
         private ICommandsInfo _commandsInfo;
+        private IConnectionHandler _connectionHandler;
 
-        public CommandBuilder(IConfiguration config, IMessageWriter messageWriter, ICommandsInfo commandsInfo)
+        public CommandBuilder(IConfiguration config, IMessageWriter messageWriter, ICommandsInfo commandsInfo, IConnectionHandler connectionHandler)
         {
             _config = config;
             _messageWriter = messageWriter;
             _commandsInfo = commandsInfo;
+            _connectionHandler = connectionHandler;
         }
 
         public ICommand BuildCommand(string command, IUser author, IMessageChannel channel, params string[] parameters)
@@ -51,6 +53,18 @@ namespace Maia.Persistence.Commands
                     break;
                 case CommandNames.uptime:
                     _command = new UptimeCommand(author, _config, channel, _messageWriter, parameters);
+                    break;
+                case CommandNames.color:
+                    _command = new ColorCommand(author, _config, channel, _messageWriter, parameters);
+                    break;
+                case CommandNames.flipcoin:
+                    _command = new FlipcoinCommand(author, _config, channel, _messageWriter, parameters);
+                    break;
+                case CommandNames.roll:
+                    _command = new RollCommand(author, _config, channel, _messageWriter, parameters);
+                    break;
+                case CommandNames.purge:
+                    _command = new PurgeCommand(author, _config, channel, _messageWriter, _connectionHandler, parameters);
                     break;
                 default:
                     break;

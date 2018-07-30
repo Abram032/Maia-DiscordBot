@@ -21,7 +21,7 @@ namespace Maia
         static ILogHandler logHandler = new LogHandler(configuration);
         static IConnectionHandler connectionHandler = new ConnectionHandler(configuration, logHandler);
         static IMessageWriter messageWriter = new MessageWriter();
-        static ICommandBuilder commandBuilder = new CommandBuilder(configuration, messageWriter, commandsInfo);
+        static ICommandBuilder commandBuilder = new CommandBuilder(configuration, messageWriter, commandsInfo, connectionHandler);
         static ICommandHandler commandHandler = new CommandHandler(configuration, commandBuilder, messageWriter);
         static IMessageHandler messageHandler = new MessageHandler(configuration, connectionHandler, commandHandler);
 
