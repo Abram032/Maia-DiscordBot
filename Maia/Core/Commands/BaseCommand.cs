@@ -35,6 +35,16 @@ namespace Maia.Core.Commands
 
         public virtual bool ValidateAuthor() => (_author.Id == GetOwnerId());
 
+        public async virtual Task InvalidUseOfCommand()
+        {
+            await _messageWriter.Send("Invalid use of command", _author, _channel);
+        }
+
+        public async virtual Task Reply(string message)
+        {
+            await _messageWriter.Send(message, _author, _channel);
+        }
+
         public ulong GetOwnerId()
         {
             string owner = _config.GetValue(ConfigKeys.OwnerID);

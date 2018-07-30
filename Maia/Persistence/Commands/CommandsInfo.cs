@@ -48,6 +48,12 @@ namespace Maia.Persistence.Commands
             keyValuePairs.Add(CommandNames.update, "Updates bot and restarts it. \nUsage: update");
             keyValuePairs.Add(CommandNames.version, "Shows current version of the bot. \nUsage: version");
             keyValuePairs.Add(CommandNames.uptime, "Shows for how long bot has been running without stopping. \nUsage: uptime");
+            keyValuePairs.Add(CommandNames.flipcoin, "Flips a coin. \nUsage: flipcoin");
+            keyValuePairs.Add(CommandNames.color, "Generates random color in hex with preview. \nUsage: color");
+            keyValuePairs.Add(CommandNames.dismiss, "Bot leaves voice channel if it's in any. \nUsage: dismiss");
+            keyValuePairs.Add(CommandNames.purge, "Removes messages sent by bot and command calls sent by users. \nUsage: purge, purge [amount]");
+            keyValuePairs.Add(CommandNames.roll, "Rolls a dice. Max up to 10 dices. \nUsage: roll [size], roll [size] [number of dices]");
+            keyValuePairs.Add(CommandNames.summon, "Bot joins voice channel of user who summoned it. \nUsage: summon");
             return keyValuePairs;
         }
     }
