@@ -11,6 +11,7 @@ namespace Maia.Persistence.Commands
 {
     public class CommandsInfo : ICommandsInfo
     {
+        //TODO: Remove singleton and make dictionary concurrent to make it threadsafe.
         private readonly Dictionary<string, string> Commands;
         private static readonly object syncRoot = new object();
         private static CommandsInfo instance = null;

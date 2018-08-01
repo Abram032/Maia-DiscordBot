@@ -8,6 +8,6 @@ namespace Maia.Core.Commands
 {
     public interface ICommandBuilder
     {
-        ICommand BuildCommand(string command, IUser author, IMessageChannel channel, params string[] parameters);
+        ICommand BuildCommand(string command, IUser author, IMessageChannel channel, IGuild guild, params string[] parameters);
     }
 }

@@ -16,16 +16,18 @@ namespace Maia.Persistence.Commands
         private IMessageWriter _messageWriter;
         private ICommandsInfo _commandsInfo;
         private IConnectionHandler _connectionHandler;
+        private IAudioService _audioService;
 
-        public CommandBuilder(IConfiguration config, IMessageWriter messageWriter, ICommandsInfo commandsInfo, IConnectionHandler connectionHandler)
+        public CommandBuilder(IConfiguration config, IMessageWriter messageWriter, ICommandsInfo commandsInfo, IConnectionHandler connectionHandler, IAudioService audioService)
         {
             _config = config;
             _messageWriter = messageWriter;
             _commandsInfo = commandsInfo;
             _connectionHandler = connectionHandler;
+            _audioService = audioService;
         }
 
-        public ICommand BuildCommand(string command, IUser author, IMessageChannel channel, params string[] parameters)
+        public ICommand BuildCommand(string command, IUser author, IMessageChannel channel, IGuild guild, params string[] parameters)
         {
             ICommand _command = null;
             switch(command)
@@ -65,6 +67,12 @@ namespace Maia.Persistence.Commands
                     break;
                 case CommandNames.purge:
                     _command = new PurgeCommand(author, _config, channel, _messageWriter, _connectionHandler, parameters);
+                    break;
+                case CommandNames.summon:
+                    _command = new SummonCommand(author, _config, channel, _messageWriter, _audioService, guild, parameters);
+                    break;
+                case CommandNames.dismiss:
+                    _command = new DismissCommand(author, _config, channel, _messageWriter, _audioService, guild, parameters);
                     break;
                 default:
                     break;

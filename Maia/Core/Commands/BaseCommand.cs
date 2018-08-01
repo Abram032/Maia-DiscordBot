@@ -39,7 +39,7 @@ namespace Maia.Core.Commands
         {
             await _messageWriter.Send("Invalid use of command", _author, _channel);
         }
-
+        //TODO: Rename to something more appropiate.
         public async virtual Task Reply(string message)
         {
             await _messageWriter.Send(message, _author, _channel);

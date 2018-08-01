@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Maia.Persistence.Settings
 {
+    //TODO: Make a config helper class and save values there. Config won't have to be a singleton anymore. Use concurrentdictionaries for the helper class and keep values there.
     class Configuration : IConfiguration
     {
         private Dictionary<string, string> config;

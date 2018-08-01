@@ -15,13 +15,19 @@ namespace Maia
 {
     class Program
     {
+        //TODO: Create validation class and separate validation from the commands, inject class through constructor later on to perform validation.
+        //TODO: Global exception handler with full info saved to special log, and basic info shown to user.
+        //TODO: Do some changes to the command execution process. Try if making few private methods with different overloads will work out.
+        //TODO: Rename stopwatch from "uptime" to something more nice.
+        //TODO: Segregate all commands into namespace clusters like AudioCommands, MiscCommands, GameCommands, InfoCommands etc.
         public static Stopwatch uptime = new Stopwatch();
         static IConfiguration configuration = Configuration.Instance;
         static ICommandsInfo commandsInfo = CommandsInfo.Instance;
         static ILogHandler logHandler = new LogHandler(configuration);
+        static IAudioService audioService = new AudioService(logHandler, configuration);
         static IConnectionHandler connectionHandler = new ConnectionHandler(configuration, logHandler);
         static IMessageWriter messageWriter = new MessageWriter();
-        static ICommandBuilder commandBuilder = new CommandBuilder(configuration, messageWriter, commandsInfo, connectionHandler);
+        static ICommandBuilder commandBuilder = new CommandBuilder(configuration, messageWriter, commandsInfo, connectionHandler, audioService);
         static ICommandHandler commandHandler = new CommandHandler(configuration, commandBuilder, messageWriter);
         static IMessageHandler messageHandler = new MessageHandler(configuration, connectionHandler, commandHandler);
 
