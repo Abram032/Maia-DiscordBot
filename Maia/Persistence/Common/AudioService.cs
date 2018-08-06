@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Audio;
+using Discord.Commands;
 using Maia.Core.Common;
 using Maia.Core.Settings;
 using Maia.Resources;
@@ -22,7 +23,7 @@ namespace Maia.Persistence.Common
         {
             _logHandler = logHandler;
         }
-
+        [Command("summon", RunMode = RunMode.Async)]
         public async Task JoinAudioChannel(IGuild guild, IVoiceChannel target)
         {
             //TODO: Throw exceptions beside returns.

@@ -2,22 +2,31 @@
 using Maia.Core.Commands;
 using Maia.Core.Common;
 using Maia.Core.Settings;
+using Maia.Core.Validation;
+using Maia.Persistence.Validation.Context;
 using Maia.Resources;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Maia.Persistence.Commands
+namespace Maia.Persistence.Commands.Chat
 {
     class PurgeCommand : BaseCommand, ICommand
     {
         IConnectionHandler _connectionHandler;
 
-        public PurgeCommand(IUser author, IConfiguration config, IMessageChannel channel, IMessageWriter messageWriter, IConnectionHandler connectionHandler, params string[] parameters) 
-            : base(author, config, channel, messageWriter, parameters)
+        public PurgeCommand(IUser author, IConfiguration config, IMessageChannel channel, IMessageWriter messageWriter, IConnectionHandler connectionHandler, IValidationHandler validationHandler, params string[] parameters) 
+            : base(author, config, channel, messageWriter, validationHandler, parameters)
         {
             _connectionHandler = connectionHandler;
+        }
+
+        public override bool CanExecute()
+        {
+            ICommandValidationContext context = new PurgeCommandValidationContext(_config);
+            var result = _validationHandler.Validate(context, this);
+            return result.IsSuccessful;
         }
 
         public override async Task ExecuteAsync()
@@ -25,17 +34,17 @@ namespace Maia.Persistence.Commands
             if(CanExecute())
             {
                 int amount = 100;
-                if(_parameters.Length == 1)
-                    amount = int.Parse(_parameters[0]);
-                var messages = await _channel.GetMessagesAsync(amount).FlattenAsync();
+                if(Parameters.Length == 1)
+                    amount = int.Parse(Parameters[0]);
+                var messages = await Channel.GetMessagesAsync(amount).FlattenAsync();
                 ulong botId = _connectionHandler.Client.CurrentUser.Id;
                 List<IMessage> messagesToPurge = new List<IMessage>();
                 foreach(var message in messages)
                 {
-                   if(ValidateMessage(message, botId))
+                   if(CheckMessage(message, botId))
                         messagesToPurge.Add(message);
                 }
-                await _messageWriter.Send("PUUUUUUURGE!!!!!", _author, _channel);
+                await _messageWriter.Send("PUUUUUUURGE!!!!!", Author, Channel);
                 foreach(var message in messagesToPurge)
                     await message.DeleteAsync();
             }
@@ -43,20 +52,7 @@ namespace Maia.Persistence.Commands
                 await InvalidUseOfCommand();
         }
 
-        public override bool ValidateParameters()
-        {
-            if(_parameters.Length == 0)
-                return true;
-            if(_parameters.Length > 1)
-                return false;
-            if(int.TryParse(_parameters[0], out int value) == false)
-                return false;
-            if(value > 100 || value < 0)
-                return false;
-            return true;
-        }
-
-        private bool ValidateMessage(IMessage message, ulong botId)
+        private bool CheckMessage(IMessage message, ulong botId)
         {
             if(message.Author.Id.Equals(botId))
                 return true;

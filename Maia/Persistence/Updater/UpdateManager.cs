@@ -83,7 +83,7 @@ namespace Maia.Persistence.Updater
                 return true;
             return false;
         }
-        //TODO: Is it working and is correct?
+        //HACK: Is it working and is correct?
         private bool CompareVersions(IUpdateInfo updateInfo, string version)
         {
             if (updateInfo.Version == string.Empty)

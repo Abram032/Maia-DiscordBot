@@ -8,19 +8,28 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord.Audio;
 using Discord.Commands;
+using Maia.Core.Validation;
+using Maia.Persistence.Validation.Context;
 
-namespace Maia.Persistence.Commands
+namespace Maia.Persistence.Commands.Audio
 {
     class SummonCommand : BaseCommand, ICommand
     {
         IAudioService _audioService;
         IGuild _guild;
 
-        public SummonCommand(IUser author, IConfiguration config, IMessageChannel channel, IMessageWriter messageWriter, IAudioService audioService, IGuild guild, params string[] parameters)
-            : base(author, config, channel, messageWriter, parameters)
+        public SummonCommand(IUser author, IConfiguration config, IMessageChannel channel, IMessageWriter messageWriter, IAudioService audioService, IGuild guild, IValidationHandler validationHandler, params string[] parameters)
+            : base(author, config, channel, messageWriter, validationHandler, parameters)
         {
             _audioService = audioService;
             _guild = guild;
+        }
+
+        public override bool CanExecute()
+        {
+            ICommandValidationContext context = new OwnerOnlyNoParametersValidationContext(_config);
+            var result = _validationHandler.Validate(context, this);
+            return result.IsSuccessful;
         }
 
         public override async Task ExecuteAsync()
@@ -30,12 +39,12 @@ namespace Maia.Persistence.Commands
                 var voiceChannel = await GetUserVoiceChannel();
                 if(voiceChannel == null)
                 {
-                    //TODO: Throw exception usernotinchannel.
+                    //Throw exception usernotinchannel.
                 }
                 else
                 {
                     await _audioService.JoinAudioChannel(_guild, voiceChannel);
-                    await Reply("I'm comming!");
+                    await SendMessageAsync("I'm comming!");
                 }
             }
             else
@@ -50,7 +59,7 @@ namespace Maia.Persistence.Commands
                 var users = await voiceChannel.GetUsersAsync().FlattenAsync();
                 foreach (var user in users)
                 {
-                    if(user.Id == _author.Id)
+                    if(user.Id == Author.Id)
                         return voiceChannel;
                 }
             }

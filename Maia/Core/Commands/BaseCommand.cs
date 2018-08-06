@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Maia.Core.Common;
 using Maia.Core.Settings;
+using Maia.Core.Validation;
 using Maia.Resources;
 using System;
 using System.Collections.Generic;
@@ -11,45 +12,43 @@ namespace Maia.Core.Commands
 {
     public abstract class BaseCommand : ICommand
     {
-        protected IUser _author;
+        public string[] Parameters { get; private set; }
+        public IUser Author { get; private set; }
+        public IMessageChannel Channel { get; private set; }
         protected IConfiguration _config;
-        protected IMessageChannel _channel;
         protected IMessageWriter _messageWriter;
-        protected string[] _parameters;
+        protected IValidationHandler _validationHandler;
 
         public BaseCommand(IUser author, IConfiguration config, IMessageChannel channel,
-            IMessageWriter messageWriter, params string[] parameters)
+            IMessageWriter messageWriter, IValidationHandler validationHandler, params string[] parameters)
         {
-            _parameters = parameters;
-            _author = author;
-            _channel = channel;
+            Parameters = parameters;
+            Author = author;
+            Channel = channel;
             _config = config;
             _messageWriter = messageWriter;
+            _validationHandler = validationHandler;
         }
 
         public abstract Task ExecuteAsync();
 
-        public virtual bool CanExecute() => (ValidateParameters() && ValidateAuthor());
+        public abstract bool CanExecute();
 
-        public virtual bool ValidateParameters() => (_parameters.Length == 0);
-
-        public virtual bool ValidateAuthor() => (_author.Id == GetOwnerId());
-
+        //TODO: Remove InvalidUseOfCommand method and throw exception for it.
         public async virtual Task InvalidUseOfCommand()
         {
-            await _messageWriter.Send("Invalid use of command", _author, _channel);
+            await _messageWriter.Send("Invalid use of command", Author, Channel);
         }
-        //TODO: Rename to something more appropiate.
-        public async virtual Task Reply(string message)
+
+        public async virtual Task SendMessageAsync(string message)
         {
-            await _messageWriter.Send(message, _author, _channel);
+            await _messageWriter.Send(message, Author, Channel);
         }
 
         public ulong GetOwnerId()
         {
             string owner = _config.GetValue(ConfigKeys.OwnerID);
-            ulong ownerID;
-            if (ulong.TryParse(owner, out ownerID) == false)
+            if (ulong.TryParse(owner, out ulong ownerID) == false)
                 return default;
             return ownerID;
         }

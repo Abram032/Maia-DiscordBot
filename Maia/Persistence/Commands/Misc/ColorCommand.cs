@@ -10,16 +10,25 @@ using System.Drawing;
 using System.IO;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using Maia.Core.Validation;
+using Maia.Persistence.Validation.Context;
 
-namespace Maia.Persistence.Commands
+namespace Maia.Persistence.Commands.Misc
 {
     class ColorCommand : BaseCommand, ICommand
     {
         Random random = new Random();
 
-        public ColorCommand(IUser author, IConfiguration config, IMessageChannel channel, IMessageWriter messageWriter, params string[] parameters)
-            : base(author, config, channel, messageWriter, parameters)
+        public ColorCommand(IUser author, IConfiguration config, IMessageChannel channel, IMessageWriter messageWriter, IValidationHandler validationHandler, params string[] parameters)
+            : base(author, config, channel, messageWriter, validationHandler, parameters)
         {
+        }
+
+        public override bool CanExecute()
+        {
+            ICommandValidationContext context = new NoParametersValidationContext(_config);
+            var result = _validationHandler.Validate(context, this);
+            return result.IsSuccessful;
         }
 
         public override async Task ExecuteAsync()
@@ -37,17 +46,12 @@ namespace Maia.Persistence.Commands
                 image.SaveAsPng(ms);
                 image.Dispose();
                 ms.Position = 0;
-                await _messageWriter.SendFile(ms, "image.png", message, _author, _channel);              
+                await _messageWriter.SendFile(ms, "image.png", message, Author, Channel);              
                 ms.Close();
                 ms.Dispose();
             }
             else
                 await InvalidUseOfCommand();
-        }
-
-        public override bool ValidateAuthor()
-        {
-            return true;
         }
 
         public byte Generate() => (byte)random.Next(0, 256);

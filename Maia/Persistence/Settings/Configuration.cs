@@ -1,6 +1,7 @@
 ﻿using Maia.Core.Settings;
 using Maia.Resources;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,45 +10,29 @@ using System.Threading.Tasks;
 
 namespace Maia.Persistence.Settings
 {
-    //TODO: Make a config helper class and save values there. Config won't have to be a singleton anymore. Use concurrentdictionaries for the helper class and keep values there.
     class Configuration : IConfiguration
     {
-        private Dictionary<string, string> config;
-        private Dictionary<string, string> defaultConfig;
-        private string configPath = Environment.CurrentDirectory + @"/Config/config.ini";
-        private string directoryPath = Environment.CurrentDirectory + @"/Config";
-        private static Configuration instance = null;
-        private static readonly object syncRoot = new object();
-
-        private Configuration()
+        private ConcurrentDictionary<string, string> config;
+        private ConcurrentDictionary<string, string> defaultConfig;
+        private readonly string configPath = Environment.CurrentDirectory + @"/Config/config.ini";
+        private readonly string directoryPath = Environment.CurrentDirectory + @"/Config";
+    
+        public Configuration()
         {
-            config = new Dictionary<string, string>();
-            defaultConfig = new Dictionary<string, string>();
+            config = new ConcurrentDictionary<string, string>();
+            defaultConfig = new ConcurrentDictionary<string, string>();
             InitConfig(defaultConfig);
             if (File.Exists(configPath) == false)
                 CreateConfig().Wait();
         }
 
-        public static IConfiguration Instance
+        private void InitConfig(ConcurrentDictionary<string, string> config)
         {
-            get
-            {
-                lock (syncRoot)
-                {
-                    if (instance == null)
-                        instance = new Configuration();
-                }
-                return instance;
-            }
-        }
-
-        private void InitConfig(Dictionary<string, string> config)
-        {
-            config.Add(ConfigKeys.Token, string.Empty);
-            config.Add(ConfigKeys.OwnerID, string.Empty);
-            config.Add(ConfigKeys.CommandPrefix, "!t");
-            config.Add(ConfigKeys.SaveLogs, "false");
-            config.Add(ConfigKeys.LogSeverity, "Info");
+            config.TryAdd(ConfigKeys.Token, string.Empty);
+            config.TryAdd(ConfigKeys.OwnerID, string.Empty);
+            config.TryAdd(ConfigKeys.CommandPrefix, "!t");
+            config.TryAdd(ConfigKeys.SaveLogs, "false");
+            config.TryAdd(ConfigKeys.LogSeverity, "Info");
         }
 
         public string GetValueOrDefault(string key)
@@ -84,10 +69,11 @@ namespace Maia.Persistence.Settings
                     {
                         string key = ExtractKeyAndValue(line, 0);
                         string value = ExtractKeyAndValue(line, 1);
-                        config.Add(key, value);
+                        config.TryAdd(key, value);
                     }
                 }
             }
+
             if (ValidateConfig() == false)
             {
                 File.Delete(configPath);
@@ -96,7 +82,7 @@ namespace Maia.Persistence.Settings
                 LoadConfig();
             }
         }
-
+        
         private string ExtractKeyAndValue(string line, int index)
         {
             line = line.Trim();
