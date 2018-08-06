@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.WebSocket;
 using Maia.Core.Commands;
 using Maia.Core.Common;
 using Maia.Core.Settings;
@@ -39,11 +40,13 @@ namespace Maia.Persistence.Commands
             string _message = message.Content;
             IUser author = message.Author;
             IMessageChannel channel = message.Channel;
+            var _channel = message.Channel as SocketGuildChannel;
+            IGuild guild = _channel.Guild;
             _message = RemovePrefix(_message);
             _message = ToLowercase(_message);
             string command = ExtractCommand(_message);
             string[] parameters = GetParameters(_message);
-            return _commandBuilder.BuildCommand(command, author, channel, parameters); 
+            return _commandBuilder.BuildCommand(command, author, channel, guild, parameters); 
         }
 
         private string[] GetParameters(string message)
