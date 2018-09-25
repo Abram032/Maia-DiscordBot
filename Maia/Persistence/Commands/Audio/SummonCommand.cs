@@ -32,6 +32,7 @@ namespace Maia.Persistence.Commands.Audio
             return result.IsSuccessful;
         }
 
+        [Command("summon", RunMode = RunMode.Async)]
         public override async Task ExecuteAsync()
         {
             if (CanExecute())
@@ -43,8 +44,8 @@ namespace Maia.Persistence.Commands.Audio
                 }
                 else
                 {
-                    await _audioService.JoinAudioChannel(_guild, voiceChannel);
                     await SendMessageAsync("I'm comming!");
+                    await _audioService.JoinAudioChannel(_guild, voiceChannel);
                 }
             }
             else

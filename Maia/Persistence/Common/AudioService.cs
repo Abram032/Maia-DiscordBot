@@ -23,6 +23,7 @@ namespace Maia.Persistence.Common
         {
             _logHandler = logHandler;
         }
+        
         [Command("summon", RunMode = RunMode.Async)]
         public async Task JoinAudioChannel(IGuild guild, IVoiceChannel target)
         {

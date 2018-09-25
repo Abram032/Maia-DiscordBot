@@ -14,6 +14,7 @@ namespace Maia.Persistence.Commands.Misc
 {
     class RollCommand : BaseCommand, ICommand
     {
+        //TODO: Implement roll without parameters (d20)
         Random random = new Random();
 
         public RollCommand(IUser author, IConfiguration config, IMessageChannel channel, IMessageWriter messageWriter, IValidationHandler validationHandler, params string[] parameters)
