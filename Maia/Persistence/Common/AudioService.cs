@@ -23,7 +23,7 @@ namespace Maia.Persistence.Common
         {
             _logHandler = logHandler;
         }
-        [Command("summon", RunMode = RunMode.Async)]
+
         public async Task JoinAudioChannel(IGuild guild, IVoiceChannel target)
         {
             //TODO: Throw exceptions beside returns.
@@ -73,19 +73,22 @@ namespace Maia.Persistence.Common
         {
             if (!File.Exists(path))
             {
-                await channel.SendMessageAsync("File does not exist!");
-                IAudioClient client;
-                if (ConnectedChannels.TryGetValue(guild.Id, out client))
+                await channel.SendMessageAsync("File does not exist!");                            
+            }
+            else
+            {
+                if (ConnectedChannels.TryGetValue(guild.Id, out IAudioClient client))
                 {
-                    //await Log(LogSeverity.Debug, $"Starting playback of {path} in {guild.Name}");
+                    await _logHandler.Handle(new LogMessage(LogSeverity.Debug, "Audio", $"Starting playback of {path} in {guild.Name}"));
                     using (var ffmpeg = CreateProcess(path))
-                    using (var stream = client.CreatePCMStream(AudioApplication.Music))
+                    using (var output = ffmpeg.StandardOutput.BaseStream)
+                    using (var discord = client.CreatePCMStream(AudioApplication.Mixed))
                     {
-                        try { await ffmpeg.StandardOutput.BaseStream.CopyToAsync(stream); }
-                        finally { await stream.FlushAsync(); }
+                        try { await output.CopyToAsync(discord); }
+                        finally { await discord.FlushAsync(); }
                     }
                 }
-            }
+            }           
         }
 
         private Process CreateProcess(string path)
@@ -95,7 +98,7 @@ namespace Maia.Persistence.Common
                 FileName = "ffmpeg.exe",
                 Arguments = $"-hide_banner -loglevel panic -i \"{path}\" -ac 2 -f s16le -ar 48000 pipe:1",
                 UseShellExecute = false,
-                RedirectStandardOutput = true
+                RedirectStandardOutput = true,
             });
         }
 

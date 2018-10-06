@@ -83,6 +83,9 @@ namespace Maia.Persistence.Commands
                 case CommandNames.dismiss:
                     _command = new DismissCommand(author, _config, channel, _messageWriter, _audioService, guild, _validationHandler, parameters);
                     break;
+                case CommandNames.play:
+                    _command = new PlayCommand(author, _config, channel, _messageWriter, _audioService, guild, _validationHandler, parameters);
+                    break;
                 default:
                     break;
             }
