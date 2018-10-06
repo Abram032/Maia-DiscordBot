@@ -47,6 +47,7 @@ namespace Maia.Persistence.Commands
             keyValuePairs.TryAdd(CommandNames.purge, "Removes messages sent by bot and command calls sent by users. \nUsage: purge, purge [amount]");
             keyValuePairs.TryAdd(CommandNames.roll, "Rolls a dice. Max up to 10 dices. \nUsage: roll [size], roll [size] [number of dices]");
             keyValuePairs.TryAdd(CommandNames.summon, "Bot joins voice channel of user who summoned it. \nUsage: summon");
+            keyValuePairs.TryAdd(CommandNames.play, "Starts playing music. \nUsage: play [song]|[url]");
             return keyValuePairs;
         }
     }

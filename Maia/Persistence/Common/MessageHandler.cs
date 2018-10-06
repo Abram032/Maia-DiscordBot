@@ -40,7 +40,7 @@ namespace Maia.Persistence.Common
         {
             if(message.Content.StartsWith(CommandPrefix) && message.Content.Length >= 2)
             {
-                await _commandHandler.Handle(message);
+                Task.Run(() => _commandHandler.Handle(message));
             }
             await Task.CompletedTask;
         }

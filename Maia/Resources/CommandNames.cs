@@ -20,6 +20,7 @@ namespace Maia.Resources
         public const string color = "color";
         public const string summon = "summon";
         public const string dismiss = "dismiss";
+        public const string play = "play";
         //TOOD: Add command to show on what environment is the bot running on, and it's version if possible.
     }
 }

@@ -8,7 +8,7 @@ namespace Maia.Resources
     class Info
     {
         public const string author = "Maissae";
-        public const string version = "0.2.3-alpha";
+        public const string version = "0.2.4-alpha";
         public const string projectRepositoryURL = "https://github.com/Maissae/Maia-DiscordBot";
     }
 }
